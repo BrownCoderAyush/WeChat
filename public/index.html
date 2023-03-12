@@ -10,7 +10,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        #form {
+        .content {
             background: rgba(0, 0, 0, 0.15);
             padding: 0.25rem;
             position: fixed;
@@ -35,7 +35,7 @@
             outline: none;
         }
 
-        #form>button {
+        #btn{
             background: #333;
             border: none;
             padding: 0 1rem;
@@ -63,9 +63,11 @@
 
 <body>
     <ul id="messages"></ul>
-    <form id="form" action="">
-        <input id="input" autocomplete="off" /><button>Send</button>
-    </form>
+        <div class = "content">
+
+            <input id="input" placeholder="Type Here" /><button id="btn">Send</button>
+        </div>
+   
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="script.js">

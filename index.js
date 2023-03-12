@@ -8,12 +8,10 @@ const io = new Server(server);
 io.on('connection', (socket) => {
     console.log('a user connected');
     console.log(socket.id);
-    socket.on('from-client',()=>{
-        console.log('received from client side');
+    socket.on('msg_send',(body)=>{
+        console.log(body);
+        io.emit('msg_received' , body);
     })
-    setInterval(()=>{
-        socket.emit('from-server');
-    },2000)
     socket.on('disconnect', () => {
       console.log('user disconnected');
     });

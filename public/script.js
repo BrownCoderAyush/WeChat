@@ -1,11 +1,24 @@
 var socket = io();
 
-socket.on('from-server' , ()=>{
-    const element = document.createElement('div');
-    element.innerHTML = "hey received an from-server event";
-    document.body.append(element);
-})
 
-setInterval(()=>{
-    socket.emit('from-client');
-},2000);
+let btn = document.getElementById('btn');
+let inputMsg = document.getElementById('input');
+let msg = document.getElementById('messages');
+
+
+btn.onclick = function (){
+
+    const text = inputMsg.value ;
+    inputMsg.value = '';
+    socket.emit('msg_send' , {
+        msg : text
+    })
+    
+}
+
+
+socket.on('msg_received' , (data)=>{
+    const li = document.createElement('li');
+    li.innerText = data.msg;
+    msg.append(li);
+})
