@@ -6,6 +6,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const connect = require('./src/config/database.js');
+const Chat = require('./src/models/chat.js');
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
@@ -20,8 +21,13 @@ io.on('connection', (socket) => {
     })
 
     // msg_send event handle 
-    socket.on('msg_send', (body) => {
-        // msg_received event emit 
+    socket.on('msg_send', async(body) => {
+        // msg_received event emit
+        const chat = await Chat.create({
+            content : body.msg , 
+            user : body.user , 
+            roomId : body.roomId
+        })
         io.to(body.roomId).emit('msg_received', body);
     })
 
@@ -32,9 +38,12 @@ io.on('connection', (socket) => {
 });
 
 // render routes 
-app.get('/chat/:roomId', (req, res) => {
+app.get('/chat/:roomId', async (req, res) => {
+    const chats = await Chat.find({roomId : req.params.roomId});
+    console.log(chats);
     res.render('index', {
-        id: req.params.roomId
+        id: req.params.roomId , 
+        chats : chats 
     })
 })
 

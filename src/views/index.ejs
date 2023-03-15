@@ -66,7 +66,11 @@
         <input id="startChat" type="hidden" data-roomId = "<%= id %>">
         <input type="text" id="username" placeholder="username">
     </div>
-    <ul id="messages"></ul>
+    <ul id="messages">
+            <% chats.forEach(function(chat){ %>
+               <li><%- `${chat.user} : ${chat.content} ` %></li>
+            <% }); %>
+    </ul>
     <div class="content">
 
         <input id="input" placeholder="Type Here" /><button id="btn">Send</button>
@@ -105,8 +109,6 @@
             console.log(data);
             const li = document.createElement('li');
             li.innerText = `${data.user} : ${data.msg}`;
-
-            console.log(li);
             msg.append(li);
         })
     </script>
