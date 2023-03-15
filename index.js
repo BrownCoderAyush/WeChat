@@ -12,27 +12,34 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/src/views'));
 
 io.on('connection', (socket) => {
-    console.log('a user connected', socket.id);
-    console.log(socket.id);
-    socket.on('msg_send',(body)=>{
-        console.log(body);
-        io.emit('msg_received' , body);
+
+    // join_room event handle 
+    socket.on("join_room", (data) => {
+        socket.join(data.roomId)
+        console.log(data.roomId);
     })
+
+    // msg_send event handle 
+    socket.on('msg_send', (body) => {
+        // msg_received event emit 
+        io.to(body.roomId).emit('msg_received', body);
+    })
+
+    // socket disconnect
     socket.on('disconnect', () => {
-      console.log('user disconnected');
+        console.log('user disconnected');
     });
 });
 
-
-// app.use(express.static(__dirname+'/public'));
-
-
-app.get('/chat/:roomId',(req,res)=>{
-    res.render('index',{
-        name : "Ayush"
+// render routes 
+app.get('/chat/:roomId', (req, res) => {
+    res.render('index', {
+        id: req.params.roomId
     })
 })
-server.listen(3000, async() => {
+
+
+server.listen(3000, async () => {
     await connect();
     console.log('listening on *:3000');
 });

@@ -63,7 +63,7 @@
 
 <body>
     <div class="userInfo">
-        <input type="text" id="roomId" placeholder="room id...">
+        <input id="startChat" type="hidden" data-roomId = "<%= id %>">
         <input type="text" id="username" placeholder="username">
     </div>
     <ul id="messages"></ul>
@@ -74,7 +74,42 @@
 
 
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script src="./js/script.js"></script>
+    <script>
+        var socket = io();
+
+
+        let btn = document.getElementById('btn');
+        let inputMsg = document.getElementById('input');
+        let msg = document.getElementById('messages');
+        let startChat = document.getElementById('startChat');
+        let user = document.getElementById('username');
+        
+
+        socket.emit('join_room' , {
+                roomId : startChat.getAttribute('data-roomid')
+            } )
+        
+        btn.onclick = function () {
+            console.log(user);
+            const text = inputMsg.value;
+            inputMsg.value = '';
+            socket.emit('msg_send', {
+                msg: text , 
+                roomId : startChat.getAttribute('data-roomid') ,
+                user : user.value
+            })
+
+        }
+
+        socket.on('msg_received', (data) => {
+            console.log(data);
+            const li = document.createElement('li');
+            li.innerText = `${data.user} : ${data.msg}`;
+
+            console.log(li);
+            msg.append(li);
+        })
+    </script>
 </body>
 
 </html>
