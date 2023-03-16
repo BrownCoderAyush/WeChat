@@ -72,7 +72,7 @@
             <% }); %>
     </ul>
     <div class="content">
-
+        <span id="type" style="display:none;">"typing...</span>
         <input id="input" placeholder="Type Here" /><button id="btn">Send</button>
     </div>
 
@@ -87,11 +87,18 @@
         let msg = document.getElementById('messages');
         let startChat = document.getElementById('startChat');
         let user = document.getElementById('username');
+        let typing = document.getElementById("type");
+        let typingId = null ; 
         
+        inputMsg.onkeypress = function(){
+            socket.emit('typing',{
+                roomId : startChat.getAttribute('data-roomid') 
+            })
+        }
 
         socket.emit('join_room' , {
                 roomId : startChat.getAttribute('data-roomid')
-            } )
+        } )
         
         btn.onclick = function () {
             console.log(user);
@@ -104,6 +111,21 @@
             })
 
         }
+
+
+
+
+        socket.on('someone_typing',()=>{
+            typing.style.display="block";
+            if(typingId){
+                clearTimeout(typingId);
+                typingId = null ; 
+            }
+            typingId = setTimeout(()=>{
+                typing.style.display="none";
+            },2000)
+
+        })
 
         socket.on('msg_received', (data) => {
             console.log(data);

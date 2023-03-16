@@ -31,6 +31,10 @@ io.on('connection', (socket) => {
         io.to(body.roomId).emit('msg_received', body);
     })
 
+    socket.on('typing',(body)=>{
+        socket.broadcast.to(body.roomId).emit('someone_typing');
+    })
+
     // socket disconnect
     socket.on('disconnect', () => {
         console.log('user disconnected');
