@@ -5,8 +5,11 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
+
+
 const connect = require('./src/config/database.js');
 const Chat = require('./src/models/chat.js');
+const {PORT} = require('./src/config/config.js');
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
@@ -52,8 +55,8 @@ app.get('/chat/:roomId', async (req, res) => {
 })
 
 
-server.listen(3000, async () => {
+server.listen(PORT, async () => {
     await connect();
-    console.log('listening on *:3000');
+    console.log(`listening on ${PORT}`);
 });
 
